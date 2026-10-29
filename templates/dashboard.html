@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Smart Cattle Monitoring Dashboard</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <div class="dashboard-container">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+
+            <div class="logo">
+                <i class="bi bi-activity"></i>
+                <span>Smart Cattle</span>
+            </div>
+
+            <nav>
+                <a href="#dashboard" class="nav-link active" data-page="dashboard">
+                    <i class="bi bi-grid"></i> Dashboard
+                </a>
+
+                <a href="#cattle" class="nav-link" data-page="cattle">
+                    <i class="bi bi-heart-pulse"></i> Cattle
+                </a>
+
+                <a href="#feeding" class="nav-link" data-page="feeding">
+                    <i class="bi bi-clock-history"></i> Feeding
+                </a>
+
+                <a href="#water" class="nav-link" data-page="water">
+                    <i class="bi bi-droplet"></i> Water Intake
+                </a>
+
+                <a href="#analytics" class="nav-link" data-page="analytics">
+                    <i class="bi bi-bar-chart"></i> Analytics
+                </a>
+
+                <a href="#anomalies" class="nav-link" data-page="anomalies">
+                    <i class="bi bi-exclamation-triangle"></i> Anomalies
+                </a>
+            </nav>
+
+            <div class="sidebar-bottom">
+                <small>AIoT Cattle Monitoring</small>
+                <small>Project Prototype</small>
+            </div>
+
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <header class="topbar">
+                <div>
+                    <h2 id="pageTitle">Dashboard</h2>
+                    <p>AIoT-Based Smart Cattle Monitoring System</p>
+                </div>
+
+                <div class="system-status">
+                    <span class="status-dot"></span>
+                    Data connection pending
+                </div>
+            </header>
+
+            <!-- Summary Cards -->
+            <section class="summary-cards" id="summarySection">
+
+                <div class="summary-card">
+                    <div class="card-icon cattle-icon">
+                        <i class="bi bi-heart-pulse"></i>
+                    </div>
+                    <div>
+                        <p>Registered Cattle</p>
+                        <h3 id="totalCattle">—</h3>
+                        <span>Registered RFID tags</span>
+                    </div>
+                </div>
+
+                <div class="summary-card">
+                    <div class="card-icon feed-icon">
+                        <i class="bi bi-clock-history"></i>
+                    </div>
+                    <div>
+                        <p>Average Feeding Duration</p>
+                        <h3 id="avgFeeding">Not measured</h3>
+                        <span>Minutes per animal today</span>
+                    </div>
+                </div>
+
+                <div class="summary-card">
+                    <div class="card-icon water-icon">
+                        <i class="bi bi-droplet"></i>
+                    </div>
+                    <div>
+                        <p>Average Drinking Duration</p>
+                        <h3 id="avgDrinking">Not measured</h3>
+                        <span>Minutes per animal today</span>
+                    </div>
+                </div>
+
+                <div class="summary-card">
+                    <div class="card-icon alert-icon">
+                        <i class="bi bi-exclamation-triangle"></i>
+                    </div>
+                    <div>
+                        <p>Anomalies Detected</p>
+                        <h3 id="totalAnomalies">Not available</h3>
+                        <span>Requires validated ML predictions</span>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- Charts -->
+            <section class="charts-row" id="chartsSection">
+
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div>
+                            <h4>Feeding Duration</h4>
+                            <p>Daily feeding duration (minutes)</p>
+                        </div>
+                    </div>
+                    <canvas id="feedChart"></canvas>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div>
+                            <h4>Drinking Duration</h4>
+                            <p>Daily drinking duration (minutes)</p>
+                        </div>
+                    </div>
+                    <canvas id="waterChart"></canvas>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div>
+                            <h4>Feeding and Drinking Frequency</h4>
+                            <p>Number of events per day</p>
+                        </div>
+                    </div>
+                    <canvas id="frequencyChart"></canvas>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div>
+                            <h4>Cattle Behaviour Distribution</h4>
+                            <p>Behaviour data will appear when available</p>
+                        </div>
+                    </div>
+                    <canvas id="behaviourChart"></canvas>
+                </div>
+
+            </section>
+
+            <!-- Cattle Table -->
+            <section class="section-card" id="cattleSection">
+
+                <div class="section-header">
+                    <div>
+                        <h4>Cattle Monitoring</h4>
+                        <p>Registered cattle and latest RFID detection</p>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table cattle-table">
+                        <thead>
+                            <tr>
+                                <th>Animal</th>
+                                <th>RFID UID</th>
+                                <th>Last Seen</th>
+                                <th>Feeding Duration</th>
+                                <th>Drinking Duration</th>
+                                <th>RFID Status</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="cattleTableBody">
+                            <tr>
+                                <td colspan="6">Loading registered cattle...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </section>
+
+            <!-- Recent Activity and Anomaly Alerts -->
+            <section class="bottom-row" id="bottomSection">
+
+                <div class="section-card activity-card">
+                    <div class="section-header">
+                        <div>
+                            <h4>Recent RFID Activity</h4>
+                            <p>Latest tag detections received by the server</p>
+                        </div>
+                    </div>
+
+                    <div class="activity">
+                        <p class="empty-state">Loading recent RFID activity...</p>
+                    </div>
+                </div>
+
+                <div class="section-card anomaly-card">
+                    <div class="section-header">
+                        <div>
+                            <h4>Anomaly Alerts</h4>
+                            <p>Verified alerts from monitoring data</p>
+                        </div>
+
+                        <span class="alert-count">0</span>
+                    </div>
+
+                    <div class="anomaly-empty">
+                        <div class="anomaly-icon">
+                            <i class="bi bi-info-circle"></i>
+                        </div>
+
+                        <div>
+                            <strong>No verified anomaly data</strong>
+                            <p>
+                                Alerts will appear when real sensor measurements
+                                or validated ML predictions are connected.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Dashboard JavaScript -->
+    <script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+
+</body>
+
+</html>
